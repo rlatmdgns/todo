@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef } from "react";
 import styled from "styled-components";
 const HeaderSection = styled.header``;
 
@@ -30,23 +30,24 @@ const InputButton = styled.button`
   vertical-align: top;
 `;
 function Header(props) {
-  console.log(props);
-  const { onChange, onClick, text } = props;
-  console.log(onChange);
-
-  // const onChange = (e) => {
-  //   setText(e.target.value);
-  // };
+  const { onChange, onClick, onKeyDown, text } = props;
+  const inputRef = useRef(false);
+  const addTodo = (e) => {
+    e.preventDefault();
+    onClick(inputRef.current.value);
+  };
   return (
     <HeaderSection>
       <TodoTitle>Todo App</TodoTitle>
       <InputArea>
         <Input
           onChange={onChange}
+          onKeyDown={onKeyDown}
           value={text}
+          ref={inputRef}
           placeholder="할 일 입력하세요."
         />
-        <InputButton onClick={onClick}>입력</InputButton>
+        <InputButton onClick={addTodo}>입력</InputButton>
       </InputArea>
     </HeaderSection>
   );

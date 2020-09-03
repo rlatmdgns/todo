@@ -11,40 +11,60 @@ const Wrap = styled.div`
   border-radius: 10px;
   background: #fff;
 `;
+
 function App() {
-  const [todos, setTodos] = useState([
-    {
-      id: 1,
-      text: "테스트테스트",
-      checked: true,
-    },
-    {
-      id: 2,
-      text: "테스트테스트",
-      checked: true,
-    },
-    {
-      id: 3,
-      text: "테스트테스트",
-      checked: true,
-    },
-  ]);
+  const [todos, setTodos] = useState([]);
   const [value, setValue] = useState("");
   const onChange = (e) => {
     setValue(e.target.value);
   };
-  const onClick = (e) => {
+  const onClick = (newTodo) => {
+    if (newTodo === "") {
+      alert("입력하세요.");
+      return;
+    }
     const todo = {
-      id: 1,
-      text: 111,
-      checked: true,
+      id: todos.length + 1,
+      text: newTodo,
+      checked: false,
     };
     setTodos([...todos, todo]);
+    setValue("");
+  };
+  const onKeyDown = (e) => {
+    if (e.key === "Enter") {
+      if (e.target.value === "") {
+        alert("입력하세요.");
+        return;
+      }
+      const todo = {
+        id: todos.length + 1,
+        text: e.target.value,
+        checked: false,
+      };
+      setTodos([...todos, todo]);
+      setValue("");
+    }
+  };
+  const chageTodoChecked = (id) => {
+    const updateTodo = todos.map((todo) => {
+      if (todo.id === Number(id)) {
+        todo.checked === false ? (todo.checked = true) : (todo.checked = false);
+      }
+      return todo;
+    });
+    setTodos(updateTodo);
+    console.log(todos);
   };
   return (
     <Wrap>
-      <Header onChange={onChange} onClick={onClick} text={value} />
-      <TodoList todos={todos} />
+      <Header
+        onChange={onChange}
+        onKeyDown={onKeyDown}
+        onClick={onClick}
+        text={value}
+      />
+      <TodoList todos={todos} chageTodoChecked={chageTodoChecked} />
     </Wrap>
   );
 }
