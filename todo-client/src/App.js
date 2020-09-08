@@ -45,6 +45,7 @@ function App() {
       setTodos([...todos, todo]);
       setValue("");
     }
+    console.log(todos);
   };
   const chageTodoChecked = (id) => {
     const updateTodo = todos.map((todo) => {
@@ -54,7 +55,10 @@ function App() {
       return todo;
     });
     setTodos(updateTodo);
-    console.log(todos);
+    // console.log(todos);
+  };
+  const todoDelete = (id) => {
+    setTodos(todos.filter((todo) => todo.id !== Number(id)));
   };
   return (
     <Wrap>
@@ -64,7 +68,11 @@ function App() {
         onClick={onClick}
         text={value}
       />
-      <TodoList todos={todos} chageTodoChecked={chageTodoChecked} />
+      <TodoList
+        todos={todos}
+        chageTodoChecked={chageTodoChecked}
+        todoDelete={todoDelete}
+      />
     </Wrap>
   );
 }
