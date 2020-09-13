@@ -1,16 +1,6 @@
 import React from "react";
-import styled from "styled-components";
+import { Item, DeleteButton, checkedStyle } from "./TodoItemStyles";
 
-const Item = styled.li`
-  cursor: pointer;
-`;
-const DeleteButton = styled.button`
-  margin-left: 20px;
-`;
-const checkedStyle = {
-  textDecoration: "line-through",
-  color: "#ccc",
-};
 function TodoItem({ todo, text, id, chageTodoChecked, todoDelete }) {
   const itemToggle = (e) => {
     e.stopPropagation();
@@ -41,5 +31,7 @@ function TodoItem({ todo, text, id, chageTodoChecked, todoDelete }) {
     );
   }
 }
+
 //memo 훔수가 바뀌지 않으면 리렌더링을 하지 않음
-export default React.memo(TodoItem);
+const MemoizedTodoItem = React.memo(TodoItem);
+export { MemoizedTodoItem };

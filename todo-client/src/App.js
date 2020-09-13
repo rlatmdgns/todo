@@ -1,16 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import styled from "styled-components";
-import Header from "./components/Header";
-import TodoList from "./components/TodoList";
-
-const Wrap = styled.div`
-  width: 500px;
-  padding-bottom: 20px;
-  margin: 0 auto;
-  border: 1px solid #111;
-  border-radius: 10px;
-  background: #fff;
-`;
+import Header from "./components/Header/index";
+import TodoList from "./components/TodoList/index";
 
 function App() {
   const [todos, setTodos] = useState([]);
@@ -18,34 +9,34 @@ function App() {
   const onChange = (e) => {
     setValue(e.target.value);
   };
-  const onClick = (newTodo) => {
-    if (newTodo === "") {
-      alert("입력하세요.");
-      return;
-    }
-    const todo = {
-      id: todos.length + 1,
-      text: newTodo,
-      checked: false,
-    };
-    setTodos([...todos, todo]);
-    setValue("");
-  };
-  const onKeyDown = (e) => {
-    if (e.key === "Enter") {
-      if (e.target.value === "") {
+  const onClick = useCallback(
+    (newTodo) => {
+      if (newTodo === "") {
         alert("입력하세요.");
         return;
       }
       const todo = {
         id: todos.length + 1,
-        text: e.target.value,
+        text: newTodo,
         checked: false,
       };
       setTodos([...todos, todo]);
       setValue("");
+    },
+    [todos] // 없으면 처음 랜더링 할때만 생성
+  );
+  const onSubmit = (e) => {
+    if (e.target.value === "") {
+      alert("입력하세요.");
+      return;
     }
-    console.log(todos);
+    const todo = {
+      id: todos.length + 1,
+      text: e.target.value,
+      checked: false,
+    };
+    setTodos([...todos, todo]);
+    setValue("");
   };
   const chageTodoChecked = (id) => {
     const updateTodo = todos.map((todo) => {
@@ -61,20 +52,24 @@ function App() {
     setTodos(todos.filter((todo) => todo.id !== Number(id)));
   };
   return (
-    <Wrap>
-      <Header
-        onChange={onChange}
-        onKeyDown={onKeyDown}
-        onClick={onClick}
-        text={value}
-      />
+    <Form onSubmit={onSubmit}>
+      <Header onChange={onChange} onClick={onClick} text={value} />
       <TodoList
         todos={todos}
         chageTodoChecked={chageTodoChecked}
         todoDelete={todoDelete}
       />
-    </Wrap>
+    </Form>
   );
 }
 
 export default App;
+
+const Form = styled.form`
+  width: 500px;
+  padding-bottom: 20px;
+  margin: 0 auto;
+  border: 1px solid #111;
+  border-radius: 10px;
+  background: #fff;
+`;

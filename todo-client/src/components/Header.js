@@ -30,7 +30,7 @@ const InputButton = styled.button`
   vertical-align: top;
 `;
 function Header(props) {
-  const { onChange, onClick, onKeyDown, text } = props;
+  const { onChange, onClick, text } = props;
   const inputRef = useRef(false);
   const addTodo = (e) => {
     e.preventDefault();
@@ -42,7 +42,6 @@ function Header(props) {
       <InputArea>
         <Input
           onChange={onChange}
-          onKeyDown={onKeyDown}
           value={text}
           ref={inputRef}
           placeholder="할 일 입력하세요."
