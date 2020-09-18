@@ -1,4 +1,5 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
+import useFetch from "./components/useFetch";
 import styled from "styled-components";
 import Header from "./components/Header/index";
 import TodoList from "./components/TodoList/index";
@@ -6,12 +7,34 @@ import TodoList from "./components/TodoList/index";
 function App() {
   const [todos, setTodos] = useState([]);
   const [value, setValue] = useState("");
+
+  // useEffect(async () => {
+  //   try {
+  //     const loadTodos = await axios.get("/api");
+  //     setTodos(loadTodos.data);
+  //   } catch (error) {
+  //     alert("데이터를 못불러왔습니다.");
+  //   }
+  // }, []);
+
+  // useEffect(async () => {
+  //   try {
+  //     await fetch("/api")
+  //       .then((res) => res.json())
+  //       .then((data) => setTodos(data));
+  //   } catch (error) {
+  //     alert("데이터를 못불러왔습니다.");
+  //   }
+  // }, []);
+
+  const loading = useFetch(setTodos, "/api");
+
   const onChange = (e) => {
     setValue(e.target.value);
   };
   const onClick = useCallback(
     (newTodo) => {
-      if (newTodo === "") {
+      if (!newTodo) {
         alert("입력하세요.");
         return;
       }
@@ -20,27 +43,19 @@ function App() {
         text: newTodo,
         checked: false,
       };
-      setTodos([...todos, todo]);
-      setValue("");
+
+      // axios.post("/api", todo).then((res) => {
+      //   let todo = res.data;
+      //   setTodos([...todos, todo]);
+      //   setValue("");
+      // });
     },
     [todos] // 없으면 처음 랜더링 할때만 생성
   );
-  const onSubmit = (e) => {
-    if (e.target.value === "") {
-      alert("입력하세요.");
-      return;
-    }
-    const todo = {
-      id: todos.length + 1,
-      text: e.target.value,
-      checked: false,
-    };
-    setTodos([...todos, todo]);
-    setValue("");
-  };
+
   const chageTodoChecked = (id) => {
     const updateTodo = todos.map((todo) => {
-      if (todo.id === Number(id)) {
+      if (todo.id === parseInt(id)) {
         todo.checked === false ? (todo.checked = true) : (todo.checked = false);
       }
       return todo;
@@ -49,10 +64,15 @@ function App() {
     // console.log(todos);
   };
   const todoDelete = (id) => {
-    setTodos(todos.filter((todo) => todo.id !== Number(id)));
+    console.log(id);
+    setTodos(todos.filter((todo) => todo.id !== parseInt(id)));
+
+    // axios.delete("/api", id).then((res) => {
+    //   console.log(res);
+    // });
   };
   return (
-    <Form onSubmit={onSubmit}>
+    <Form>
       <Header onChange={onChange} onClick={onClick} text={value} />
       <TodoList
         todos={todos}

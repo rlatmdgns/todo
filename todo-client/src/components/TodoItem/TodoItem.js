@@ -33,5 +33,4 @@ function TodoItem({ todo, text, id, chageTodoChecked, todoDelete }) {
 }
 
 //memo 훔수가 바뀌지 않으면 리렌더링을 하지 않음
-const MemoizedTodoItem = React.memo(TodoItem);
-export { MemoizedTodoItem };
+export const MemoizedTodoItem = React.memo(TodoItem);
